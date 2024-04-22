@@ -66,11 +66,17 @@ public:
 
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/earth_color.png", "sphere_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/earth_normal.png", "sphere_normal");
-        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_color.png", "head_color");
-        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/bunny_normal.png", "bunny_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/window.png", "window_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/buzz_color.png", "buzz_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/star.png", "star_color");
+
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_color.png", "head_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_color.png", "hair_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_normal.png", "hair_normal");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_color.png", "cloth_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_normal.png", "cloth_normal");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/body_color.png", "body_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eye_color.png", "eye_color");
 
         //// Add all the lights you need for the scene (no more than 4 lights)
         //// The four parameters are position, ambient, diffuse, and specular.
@@ -158,10 +164,15 @@ public:
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
 
-        //// Here we load a bunny object with the basic shader to show how to add an object into the scene
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////// Angelina Character Import ////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////Normal OBJ import/////////////////////////////////////////////////////////////
+        ////head
         {
             //// create object by reading an obj mesh
-            auto bunny = Add_Obj_Mesh_Object("obj/head.obj");
+            auto head = Add_Obj_Mesh_Object("obj/head.obj");
 
             //// set object's transform
             Matrix4f t;
@@ -169,21 +180,158 @@ public:
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1;
-            bunny->Set_Model_Matrix(t);
+            head->Set_Model_Matrix(t);
 
             //// set object's material
-            bunny->Set_Ka(Vector3f(0.1, 0.1, 0.1));
-            bunny->Set_Kd(Vector3f(0.7, 0.7, 0.7));
-            bunny->Set_Ks(Vector3f(2, 2, 2));
-            bunny->Set_Shininess(128);
+            head->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            head->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            head->Set_Ks(Vector3f(2, 2, 2));
+            head->Set_Shininess(128);
 
             //// bind texture to object
-            bunny->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
-            bunny->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("bunny_normal"));
+            head->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
 
             //// bind shader to object
-            bunny->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+            head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
+
+        ///hair
+        {
+            auto hair = Add_Obj_Mesh_Object("obj/hair.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            hair->Set_Model_Matrix(t);
+            hair->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            hair->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            hair->Set_Ks(Vector3f(2, 2, 2));
+            hair->Set_Shininess(128);
+            hair->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
+            hair->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
+            hair->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+        //cloth
+        {
+            auto cloth = Add_Obj_Mesh_Object("obj/cloth.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            cloth->Set_Model_Matrix(t);
+            cloth->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            cloth->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            cloth->Set_Ks(Vector3f(2, 2, 2));
+            cloth->Set_Shininess(128);
+            cloth->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("cloth_color"));
+            cloth->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("cloth_normal"));
+            cloth->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+        //body
+        {
+            auto body = Add_Obj_Mesh_Object("obj/body.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            body->Set_Model_Matrix(t);
+            body->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            body->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            body->Set_Ks(Vector3f(2, 2, 2));
+            body->Set_Shininess(128);
+            body->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("body_color"));
+            body->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+        //eyebrow
+        {
+            auto eyebrow = Add_Obj_Mesh_Object("obj/eyebrow.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            eyebrow->Set_Model_Matrix(t);
+            eyebrow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            eyebrow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            eyebrow->Set_Ks(Vector3f(2, 2, 2));
+            eyebrow->Set_Shininess(128);
+            eyebrow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
+            eyebrow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+        //eye
+        {
+            auto eye = Add_Obj_Mesh_Object("obj/eyeball.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            eye->Set_Model_Matrix(t);
+            eye->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            eye->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            eye->Set_Ks(Vector3f(2, 2, 2));
+            eye->Set_Shininess(128);
+            eye->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eye_color"));
+            eye->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+
+        //////////////////////////////////////////////////////Special OBJ import/////////////////////////////////////////////////////////////
+        //fur - placeholder
+        //TO-DO: 加入贴图毛发贴图实现毛发效果，应该和草差不多，等草写完试试这个
+        {
+            auto fur = Add_Obj_Mesh_Object("obj/fur.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            fur->Set_Model_Matrix(t);
+            fur->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            fur->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            fur->Set_Ks(Vector3f(2, 2, 2));
+            fur->Set_Shininess(128);
+            fur->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
+            fur->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
+            fur->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+        //eyeshadow - 不是化妆那个眼影，是眼眶给眼珠的阴影
+        //应该做成一个半透明混合阴影？我猜是正片叠底之类的，反正先placeholder
+        {
+            auto eyeshadow = Add_Obj_Mesh_Object("obj/eyeshadow.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            eyeshadow->Set_Model_Matrix(t);
+            eyeshadow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            eyeshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            eyeshadow->Set_Ks(Vector3f(2, 2, 2));
+            eyeshadow->Set_Shininess(128);
+            eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
+            eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+        //和eyeshadow同理，不过位置有点诡异，最好可以做一个对脸部的masking效果，反正先placeholder在这里
+        {
+            auto hairshadow = Add_Obj_Mesh_Object("obj/hairshadow.obj");
+            Matrix4f t;
+            t << 1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1;
+            hairshadow->Set_Model_Matrix(t);
+            hairshadow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            hairshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            hairshadow->Set_Ks(Vector3f(2, 2, 2));
+            hairshadow->Set_Shininess(128);
+            hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
+            hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+
+
 
         //// Here we show an example of adding a mesh with noise-terrain (A6)
         {
