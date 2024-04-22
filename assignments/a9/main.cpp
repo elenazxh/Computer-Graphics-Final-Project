@@ -55,6 +55,8 @@ public:
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/terrain.vert", "shaders/terrain.frag", "terrain");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/skybox.vert", "shaders/skybox.frag", "skybox");
 
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/multiplyblend.frag", "multiply");
+
         //// Load all the textures you need for the scene
         //// In the function call of Add_Shader_From_File(), we specify two names:
         //// (1) the texture's file name
@@ -77,6 +79,9 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_normal.png", "cloth_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/body_color.png", "body_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eye_color.png", "eye_color");
+        
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eyeshadow_multiply.png", "eyeshadow_multiply");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hairshadow_multiply.png", "hairshadow_multiply");
 
         //// Add all the lights you need for the scene (no more than 4 lights)
         //// The four parameters are position, ambient, diffuse, and specular.
@@ -297,8 +302,9 @@ public:
             fur->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
             fur->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
+
         //eyeshadow - 不是化妆那个眼影，是眼眶给眼珠的阴影
-        //应该做成一个半透明混合阴影？我猜是正片叠底之类的，反正先placeholder
+        //应该做正片叠底之类的，因为对应的texture是“M”
         {
             auto eyeshadow = Add_Obj_Mesh_Object("obj/eyeshadow.obj");
             Matrix4f t;
@@ -311,8 +317,9 @@ public:
             eyeshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
             eyeshadow->Set_Ks(Vector3f(2, 2, 2));
             eyeshadow->Set_Shininess(128);
-            eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
-            eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+            eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eyeshadow_multiply"));
+            eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eye_color"));
+            eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("multiply"));
         }
         //和eyeshadow同理，不过位置有点诡异，最好可以做一个对脸部的masking效果，反正先placeholder在这里
         {
@@ -327,8 +334,9 @@ public:
             hairshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
             hairshadow->Set_Ks(Vector3f(2, 2, 2));
             hairshadow->Set_Shininess(128);
-            hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
-            hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+            hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hairshadow_multiply"));
+            hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
+            hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("multiply"));
         }
 
 
