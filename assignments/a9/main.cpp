@@ -51,6 +51,7 @@ public:
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/basic.frag", "basic");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/phong.frag", "phong");
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/sdfshader.frag", "sdfshader");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/environment.frag", "environment");
         // OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/alphablend.frag", "blend");
@@ -80,6 +81,7 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/skybox.png", "skybox");
 
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_color.png", "head_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_sdf.png", "head_sdf");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_color.png", "hair_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_normal.png", "hair_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_color.png", "cloth_color");
@@ -205,10 +207,10 @@ public:
 
             //// bind texture to object
             head->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
-            head->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
+            head->Add_Texture("tex_sdf", OpenGLTextureLibrary::Get_Texture("head_sdf"));
 
             //// bind shader to object
-            head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+            head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("sdfshader"));
         }
 
         ///hair
