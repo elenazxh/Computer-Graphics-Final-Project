@@ -44,11 +44,11 @@ uniform float shininess;    /* object material shininess */
 
 uniform sampler2D tex_color;   /* texture sampler for color */
 uniform sampler2D tex_sdf;   /* texture sampler for normal vector */
-
+uniform sampler2D tex_st;
 /*output variables*/
 out vec4 frag_color;
 
-vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n)
+vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n, vec2 uv)
 {
 
     vec3 ambient = light.amb.rgb * ka;
@@ -56,11 +56,16 @@ vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n)
     vec3 toView = normalize(e - p);
     vec3 reflectDir = reflect(-toLight, n);
 
+    vec3 st = texture(tex_st, uv).rgb; // Use vec2 for the ST map's two components
+    float specularIntensity = st.b; // Specular intensity from S channel
+    float glossiness = st.r; // Glossiness from T channel
+
     float diff = max(dot(n, toLight), 0.0);
     vec3 diffuse = light.dif.rgb * kd * diff;
 
-    float spec = pow(max(dot(toView, reflectDir), 0.0), shininess);
-    vec3 specular = light.spec.rgb * ks * spec;
+    // Use glossiness in the exponent for shininess to modify the specular highlight size
+    float spec = pow(max(dot(toView, reflectDir), 0.0), shininess * glossiness);
+    vec3 specular = light.spec.rgb * ks * specularIntensity * spec;
 
     vec3 phong = ambient + diffuse + specular;
     return phong;
@@ -68,13 +73,10 @@ vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n)
 
 vec3 apply_sdf_to_normal(vec3 normal, vec2 uv)
 {
-    float sdf_value = texture(tex_sdf, uv).g; // SDF value from green channel
-    // Modify the normal based on the SDF value. This is a placeholder for whatever operation you need to do with the SDF value.
-    // For instance, you might want to flatten the normal (make it more 'face-on' to the view) if the sdf_value is above a certain threshold.
-    // The following is a simple operation where we mix between the original normal and the face normal based on SDF value.
-    vec3 face_normal = vec3(0.0, 0.0, 1.0); // Assuming your face normal points along the positive Z-axis.
-    normal = mix(normal, face_normal, sdf_value); // Linearly interpolate based on the SDF value.
-    return normalize(normal); // Return the modified normal.
+    float sdf_value = texture(tex_sdf, uv).g; //green channel
+    vec3 face_normal = vec3(0.0, 0.0, 1.0); 
+    normal = mix(normal, face_normal, sdf_value); 
+    return normalize(normal);
 }
 
 
@@ -93,7 +95,7 @@ void main()
 
     for (int i = 0; i < lt_att[0]; i++)
     {
-        phong_lighting += shading_texture_with_phong(lt[i], e, p, texture_color, N);
+        phong_lighting += shading_texture_with_phong(lt[i], e, p, texture_color, N, vtx_uv);
     }
 
     vec3 final_color = texture_color * phong_lighting; // Combine texture color with lighting
