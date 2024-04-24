@@ -50,10 +50,19 @@ out vec4 frag_color;
 
 vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n)
 {
-    vec3 l = normalize(s-p);
-    vec3 r = reflect(-l, n);
-    vec3 v = normalize(e-p);
-    vec3 phong = ka*(light.amb.rgb) + kd*(light.dif.rgb)*max(0, dot(l,n)) + ks*(light.spec.rgb)*pow(max(0, dot(v,r)),shininess);
+
+    vec3 ambient = light.amb.rgb * ka;
+    vec3 toLight = normalize(light.pos.xyz - p);
+    vec3 toView = normalize(e - p);
+    vec3 reflectDir = reflect(-toLight, n);
+
+    float diff = max(dot(n, toLight), 0.0);
+    vec3 diffuse = light.dif.rgb * kd * diff;
+
+    float spec = pow(max(dot(toView, reflectDir), 0.0), shininess);
+    vec3 specular = light.spec.rgb * ks * spec;
+
+    vec3 phong = ambient + diffuse + specular;
     return phong;
 }
 
@@ -66,13 +75,24 @@ vec3 read_normal_texture()
 
 void main()
 {
-    vec3 e = position.xyz;              //// eye position
-    vec3 p = vtx_position;              //// surface position
-    vec3 N = normalize(vtx_normal);     //// normal vector
-    vec3 T = normalize(vtx_tangent);    //// tangent vector
+    vec3 e = position.xyz;             
+    vec3 p = vtx_position;              
+    vec3 N = normalize(vtx_normal);     
+    vec3 T = normalize(vtx_tangent);    
 
     vec3 texture_normal = read_normal_texture();
-    vec3 texture_color = texture(tex_color, vtx_uv).rgb;
+    mat3 TBN = mat3(T, cross(N, T), N); 
+    vec3 N_mapped = normalize(TBN * texture_normal); 
 
-    frag_color = vec4(texture_color.rgb, 1.0);
+    vec3 texture_color = texture(tex_color, vtx_uv).rgb; // Use texture color as diffuse color
+
+    vec3 phong_lighting = vec3(0.0, 0.0, 0.0);
+
+    for (int i = 0; i < lt_att[0]; i++)
+    {
+        phong_lighting += shading_texture_with_phong(lt[i], e, p, texture_color, N_mapped);
+    }
+
+    vec3 final_color = texture_color * phong_lighting; // Combine texture color with lighting
+    frag_color = vec4(final_color, 1.0);
 }

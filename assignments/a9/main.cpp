@@ -85,6 +85,7 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_normal.png", "cloth_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/body_color.png", "body_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eye_color.png", "eye_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/no_normal.jpg", "basic_normal");
         
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eyeshadow_multiply.png", "eyeshadow_multiply");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hairshadow_multiply.png", "hairshadow_multiply");
@@ -170,6 +171,7 @@ public:
 
             //// bind texture to object
             sphere->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("skybox"));
+            sphere->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
 
             //// bind shader to object
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
@@ -202,6 +204,7 @@ public:
 
             //// bind texture to object
             head->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
+            head->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
 
             //// bind shader to object
             head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
@@ -255,6 +258,7 @@ public:
             body->Set_Ks(Vector3f(2, 2, 2));
             body->Set_Shininess(128);
             body->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("body_color"));
+            body->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
             body->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
         //eyebrow
@@ -271,6 +275,7 @@ public:
             eyebrow->Set_Ks(Vector3f(2, 2, 2));
             eyebrow->Set_Shininess(128);
             eyebrow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
+            eyebrow->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
             eyebrow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
         //eye
@@ -287,6 +292,7 @@ public:
             eye->Set_Ks(Vector3f(2, 2, 2));
             eye->Set_Shininess(128);
             eye->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eye_color"));
+            eye->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
             eye->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
 
