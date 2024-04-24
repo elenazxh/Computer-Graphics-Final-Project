@@ -156,17 +156,17 @@ public:
 
             //// set object's transform
             Matrix4f t;
-            t << 1, 0, 0, -1.5,
-                0, 1, 0, -1,
-                0, 0, 1, 0.5,
+            t << 50, 0, 0, -1.5,
+                0, 50, 0, -1,
+                0, 0, 50, 0.5,
                 0, 0, 0, 1;
             sphere->Set_Model_Matrix(t);
 
             //// set object's material
-            sphere->Set_Ka(Vector3f(0.1, 0.1, 0.1));
-            sphere->Set_Kd(Vector3f(0.7, 0.7, 0.7));
-            sphere->Set_Ks(Vector3f(2, 2, 2));
-            sphere->Set_Shininess(128);
+            // sphere->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            // sphere->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            // sphere->Set_Ks(Vector3f(2, 2, 2));
+            // sphere->Set_Shininess(128);
 
             //// bind texture to object
             sphere->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("skybox"));
