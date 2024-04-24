@@ -49,6 +49,6 @@ void main()
     vec4 baseColor = texture(base_color, vtx_uv);
 
     //ÕýÆ¬µþµ×
-    vec3 blendedColor = shadowColor.rgb * baseColor.rgb; 
+    vec3 blendedColor = tex_color.rgb * baseColor.rgb; 
     frag_color = vec4(blendedColor, 1.0);
 }

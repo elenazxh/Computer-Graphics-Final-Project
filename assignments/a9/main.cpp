@@ -21,6 +21,8 @@
 #define CLOCKS_PER_SEC 100000
 #endif
 
+using namespace OpenGLFbos;
+
 class MyDriver : public OpenGLViewer
 {
     std::vector<OpenGLTriangleMesh *> mesh_object_array;
@@ -303,6 +305,10 @@ public:
             fur->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
 
+        auto shadowFbo = OpenGLFbos::Get_Fbo_Instance("shadowFbo", 0);
+
+
+
         //eyeshadow - 不是化妆那个眼影，是眼眶给眼珠的阴影
         //应该做正片叠底之类的，因为对应的texture是“M”
         {
@@ -318,10 +324,9 @@ public:
             eyeshadow->Set_Ks(Vector3f(2, 2, 2));
             eyeshadow->Set_Shininess(128);
             eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eyeshadow_multiply"));
-            eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eye_color"));
-            eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("multiply"));
+            eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
-        //和eyeshadow同理，不过位置有点诡异，最好可以做一个对脸部的masking效果，反正先placeholder在这里
+        //和eyeshadow同理
         {
             auto hairshadow = Add_Obj_Mesh_Object("obj/hairshadow.obj");
             Matrix4f t;
@@ -335,8 +340,7 @@ public:
             hairshadow->Set_Ks(Vector3f(2, 2, 2));
             hairshadow->Set_Shininess(128);
             hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hairshadow_multiply"));
-            hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("head_color"));
-            hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("multiply"));
+            hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
 
 
