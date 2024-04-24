@@ -130,26 +130,26 @@ public:
         
         //// Background Option (3): Sky box
         //// Here we provide a default implementation of a sky box; customize it for your own sky box
-        {
-            // from https://www.humus.name/index.php?page=Textures
-            const std::vector<std::string> cubemap_files{
-                "cubemap/posx.jpg",     //// + X
-                "cubemap/negx.jpg",     //// - X
-                "cubemap/posy.jpg",     //// + Y
-                "cubemap/negy.jpg",     //// - Y
-                "cubemap/posz.jpg",     //// + Z
-                "cubemap/negz.jpg",     //// - Z 
-            };
-            OpenGLTextureLibrary::Instance()->Add_CubeMap_From_Files(cubemap_files, "cube_map");
+        //{
+        //    // from https://www.humus.name/index.php?page=Textures
+        //    const std::vector<std::string> cubemap_files{
+        //        "cubemap/posx.jpg",     //// + X
+        //        "cubemap/negx.jpg",     //// - X
+        //        "cubemap/posy.jpg",     //// + Y
+        //        "cubemap/negy.jpg",     //// - Y
+        //        "cubemap/posz.jpg",     //// + Z
+        //        "cubemap/negz.jpg",     //// - Z 
+        //    };
+        //    OpenGLTextureLibrary::Instance()->Add_CubeMap_From_Files(cubemap_files, "cube_map");
 
-            skybox = Add_Interactive_Object<OpenGLSkybox>();
-            skybox->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("skybox"));
-            skybox->Initialize();
-        }
+        //    skybox = Add_Interactive_Object<OpenGLSkybox>();
+        //    skybox->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("skybox"));
+        //    skybox->Initialize();
+        //}
 
         //// Background Option (4): Sky sphere
         //// Here we provide a default implementation of a textured sphere; customize it for your own sky sphere
-        /*
+       
         {
             //// create object by reading an obj mesh
             auto sphere = Add_Obj_Mesh_Object("obj/sphere.obj");
@@ -174,7 +174,7 @@ public:
             //// bind shader to object
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
-        */
+       
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////// Angelina Character Import ////////////////////////////////////////////////////////
