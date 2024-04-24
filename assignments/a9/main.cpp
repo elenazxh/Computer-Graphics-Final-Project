@@ -74,6 +74,8 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/buzz_color.png", "buzz_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/star.png", "star_color");
 
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/skybox.png", "skybox");
+
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_color.png", "head_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_color.png", "hair_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_normal.png", "hair_normal");
@@ -115,12 +117,12 @@ public:
 
         //// Background Option (2): Programmable Canvas
         //// By default, we load a GT buzz + a number of stars
-        {
-            bgEffect = Add_Interactive_Object<OpenGLBgEffect>();
-            bgEffect->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("stars"));
-            bgEffect->Add_Texture("tex_buzz", OpenGLTextureLibrary::Get_Texture("buzz_color")); // bgEffect can also Add_Texture
-            bgEffect->Initialize();
-        }
+        //{
+        //    bgEffect = Add_Interactive_Object<OpenGLBgEffect>();
+        //    bgEffect->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("stars"));
+        //    bgEffect->Add_Texture("tex_buzz", OpenGLTextureLibrary::Get_Texture("buzz_color")); // bgEffect can also Add_Texture
+        //    bgEffect->Initialize();
+        //}
         
         //// Background Option (3): Sky box
         //// Here we provide a default implementation of a sky box; customize it for your own sky box
@@ -164,8 +166,7 @@ public:
             sphere->Set_Shininess(128);
 
             //// bind texture to object
-            sphere->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("sphere_color"));
-            sphere->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("sphere_normal"));
+            sphere->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("skybox"));
 
             //// bind shader to object
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
@@ -346,79 +347,79 @@ public:
 
 
         //// Here we show an example of adding a mesh with noise-terrain (A6)
-        {
-            //// create object by reading an obj mesh
-            auto terrain = Add_Obj_Mesh_Object("obj/plane.obj");
+        //{
+        //    //// create object by reading an obj mesh
+        //    auto terrain = Add_Obj_Mesh_Object("obj/plane.obj");
 
-            //// set object's transform
-            Matrix4f r, s, t;
-            r << 1, 0, 0, 0,
-                0, 0.5, 0.67, 0,
-                0, -0.67, 0.5, 0,
-                0, 0, 0, 1;
-            s << 0.5, 0, 0, 0,
-                0, 0.5, 0, 0,
-                0, 0, 0.5, 0,
-                0, 0, 0, 1;
-            t << 1, 0, 0, -2,
-                 0, 1, 0, 0.5,
-                 0, 0, 1, 0,
-                 0, 0, 0, 1,
-            terrain->Set_Model_Matrix(t * s * r);
+        //    //// set object's transform
+        //    Matrix4f r, s, t;
+        //    r << 1, 0, 0, 0,
+        //        0, 0.5, 0.67, 0,
+        //        0, -0.67, 0.5, 0,
+        //        0, 0, 0, 1;
+        //    s << 0.5, 0, 0, 0,
+        //        0, 0.5, 0, 0,
+        //        0, 0, 0.5, 0,
+        //        0, 0, 0, 1;
+        //    t << 1, 0, 0, -2,
+        //         0, 1, 0, 0.5,
+        //         0, 0, 1, 0,
+        //         0, 0, 0, 1,
+        //    terrain->Set_Model_Matrix(t * s * r);
 
-            //// set object's material
-            terrain->Set_Ka(Vector3f(0.1f, 0.1f, 0.1f));
-            terrain->Set_Kd(Vector3f(0.7f, 0.7f, 0.7f));
-            terrain->Set_Ks(Vector3f(1, 1, 1));
-            terrain->Set_Shininess(128.f);
+        //    //// set object's material
+        //    terrain->Set_Ka(Vector3f(0.1f, 0.1f, 0.1f));
+        //    terrain->Set_Kd(Vector3f(0.7f, 0.7f, 0.7f));
+        //    terrain->Set_Ks(Vector3f(1, 1, 1));
+        //    terrain->Set_Shininess(128.f);
 
-            //// bind shader to object (we do not bind texture for this object because we create noise for texture)
-            terrain->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("terrain"));
-        }
+        //    //// bind shader to object (we do not bind texture for this object because we create noise for texture)
+        //    terrain->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("terrain"));
+        //}
 
         //// Here we show an example of adding a transparent object with alpha blending
         //// This example will be useful if you implement objects such as tree leaves, grass blades, flower pedals, etc.
         //// Alpha blending will be turned on automatically if your texture has the alpha channel
-        {
-            //// create object by reading an obj mesh
-            auto sqad = Add_Obj_Mesh_Object("obj/sqad.obj");
+        //{
+        //    //// create object by reading an obj mesh
+        //    auto sqad = Add_Obj_Mesh_Object("obj/sqad.obj");
 
-            //// set object's transform
-            Matrix4f t;
-            t << 1, 0, 0, -0.5,
-                0, 1, 0, 0,
-                0, 0, 1, 1.5,
-                0, 0, 0, 1;
-            sqad->Set_Model_Matrix(t);
+        //    //// set object's transform
+        //    Matrix4f t;
+        //    t << 1, 0, 0, -0.5,
+        //        0, 1, 0, 0,
+        //        0, 0, 1, 1.5,
+        //        0, 0, 0, 1;
+        //    sqad->Set_Model_Matrix(t);
 
-            //// bind texture to object
-            sqad->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("window_color"));
+        //    //// bind texture to object
+        //    sqad->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("window_color"));
 
-            //// bind shader to object
-            sqad->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("blend"));
-        }
+        //    //// bind shader to object
+        //    sqad->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("blend"));
+        //}
 
         //// Here we show an example of adding a billboard particle with a star shape using alpha blending
         //// The billboard is rendered with its texture and is always facing the camera.
         //// This example will be useful if you plan to implement a CPU-based particle system.
-        {
-            //// create object by reading an obj mesh
-            auto sqad = Add_Obj_Mesh_Object("obj/sqad.obj");
+        //{
+        //    //// create object by reading an obj mesh
+        //    auto sqad = Add_Obj_Mesh_Object("obj/sqad.obj");
 
-            //// set object's transform
-            Matrix4f t;
-            t << 1, 0, 0, 0,
-                 0, 1, 0, 0,
-                 0, 0, 1, 2.5,
-                 0, 0, 0, 1;
-            sqad->Set_Model_Matrix(t);
+        //    //// set object's transform
+        //    Matrix4f t;
+        //    t << 1, 0, 0, 0,
+        //         0, 1, 0, 0,
+        //         0, 0, 1, 2.5,
+        //         0, 0, 0, 1;
+        //    sqad->Set_Model_Matrix(t);
 
-            //// bind texture to object
-            sqad->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("star_color"));
+        //    //// bind texture to object
+        //    sqad->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("star_color"));
 
-            //// bind shader to object
-            sqad->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
-        }
+        //    //// bind shader to object
+        //    sqad->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
+        //}
 
         //// Here we show an example of shading (ray-tracing) a sphere with environment mapping
         /*
