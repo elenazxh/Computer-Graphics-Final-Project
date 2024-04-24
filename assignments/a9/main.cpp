@@ -51,7 +51,7 @@ public:
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/basic.frag", "basic");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/environment.frag", "environment");
-        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
+        // OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/alphablend.frag", "blend");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/billboard.vert", "shaders/alphablend.frag", "billboard");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/terrain.vert", "shaders/terrain.frag", "terrain");
@@ -68,11 +68,13 @@ public:
         //// Here "tex_sampler" is the name of the texture sampler2D you used in your shader, and
         //// "tex_name" needs to be one of the texture names you created previously with Add_Texture_From_File()
 
+        /*
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/earth_color.png", "sphere_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/earth_normal.png", "sphere_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/window.png", "window_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/buzz_color.png", "buzz_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/star.png", "star_color");
+        */
 
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/skybox.png", "skybox");
 
@@ -117,16 +119,17 @@ public:
 
         //// Background Option (2): Programmable Canvas
         //// By default, we load a GT buzz + a number of stars
+        
         //{
         //    bgEffect = Add_Interactive_Object<OpenGLBgEffect>();
         //    bgEffect->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("stars"));
         //    bgEffect->Add_Texture("tex_buzz", OpenGLTextureLibrary::Get_Texture("buzz_color")); // bgEffect can also Add_Texture
         //    bgEffect->Initialize();
         //}
+
         
         //// Background Option (3): Sky box
         //// Here we provide a default implementation of a sky box; customize it for your own sky box
-        /*
         {
             // from https://www.humus.name/index.php?page=Textures
             const std::vector<std::string> cubemap_files{
@@ -143,10 +146,10 @@ public:
             skybox->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("skybox"));
             skybox->Initialize();
         }
-        */
 
         //// Background Option (4): Sky sphere
         //// Here we provide a default implementation of a textured sphere; customize it for your own sky sphere
+        /*
         {
             //// create object by reading an obj mesh
             auto sphere = Add_Obj_Mesh_Object("obj/sphere.obj");
@@ -171,6 +174,7 @@ public:
             //// bind shader to object
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
+        */
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////// Angelina Character Import ////////////////////////////////////////////////////////
@@ -288,7 +292,7 @@ public:
 
         //////////////////////////////////////////////////////Special OBJ import/////////////////////////////////////////////////////////////
         //fur - placeholder
-        //TO-DO: ¼ÓÈëÌùÍ¼Ã«·¢ÌùÍ¼ÊµÏÖÃ«·¢Ð§¹û£¬Ó¦¸ÃºÍ²Ý²î²»¶à£¬µÈ²ÝÐ´ÍêÊÔÊÔÕâ¸ö
+        //TO-DO: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Ã«ï¿½ï¿½ï¿½ï¿½Í¼Êµï¿½ï¿½Ã«ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ÃºÍ²Ý²î²»ï¿½à£¬ï¿½È²ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             auto fur = Add_Obj_Mesh_Object("obj/fur.obj");
             Matrix4f t;
@@ -310,8 +314,8 @@ public:
 
 
 
-        //eyeshadow - ²»ÊÇ»¯×±ÄÇ¸öÑÛÓ°£¬ÊÇÑÛ¿ô¸øÑÛÖéµÄÒõÓ°
-        //Ó¦¸Ã×öÕýÆ¬µþµ×Ö®ÀàµÄ£¬ÒòÎª¶ÔÓ¦µÄtextureÊÇ¡°M¡±
+        //eyeshadow - ï¿½ï¿½ï¿½Ç»ï¿½×±ï¿½Ç¸ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½Û¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°
+        //Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Îªï¿½ï¿½Ó¦ï¿½ï¿½textureï¿½Ç¡ï¿½Mï¿½ï¿½
         {
             auto eyeshadow = Add_Obj_Mesh_Object("obj/eyeshadow.obj");
             Matrix4f t;
@@ -327,7 +331,7 @@ public:
             eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eyeshadow_multiply"));
             eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
-        //ºÍeyeshadowÍ¬Àí
+        //ï¿½ï¿½eyeshadowÍ¬ï¿½ï¿½
         {
             auto hairshadow = Add_Obj_Mesh_Object("obj/hairshadow.obj");
             Matrix4f t;
