@@ -48,9 +48,13 @@ uniform sampler2D tex_normal;   /* texture sampler for normal vector */
 /*output variables*/
 out vec4 frag_color;
 
-vec3 shading_texture_with_phong(light li, vec3 e, vec3 p, vec3 s, vec3 n)
+vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n)
 {
-    return vec3(0.0);
+    vec3 l = normalize(s-p);
+    vec3 r = reflect(-l, n);
+    vec3 v = normalize(e-p);
+    vec3 phong = ka*(light.amb.rgb) + kd*(light.dif.rgb)*max(0, dot(l,n)) + ks*(light.spec.rgb)*pow(max(0, dot(v,r)),shininess);
+    return phong;
 }
 
 vec3 read_normal_texture()
