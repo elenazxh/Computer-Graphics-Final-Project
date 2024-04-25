@@ -78,7 +78,7 @@ vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
     vec3 toLight = normalize(light.pos.xyz - p);
 
     // Calculate diffuse intensity and clamp to [0, 1]
-    float diff = clamp(dot(n, toLight), 0.0, 1.0);
+    float diff = clamp(dot(n, toLight), 0.65, 1.0);
 
     // Remap the diffuse range [0, 1] to [0, 1] and use it as the texture coordinate to sample from the color ramp
     float rampPosition = diff; // No need to remap as dot product is already [0, 1]
@@ -116,13 +116,11 @@ void main()
     vec3 texture_color = texture(tex_color, vtx_uv).rgb; // Use texture color as diffuse color
 
     vec3 toon_lighting = vec3(0.0, 0.0, 0.0);
-    for (int i = 0; i < lt_att[0]; i++)
-    {
-        toon_lighting += toon_shading(lt[i], e, p, N);
-        //toon_lighting += shading_texture_with_phong(lt[i], e, p, texture_color, N, vtx_uv);
-    }
+    toon_lighting += toon_shading(lt[0], e, p, N);
+    //toon_lighting += shading_texture_with_phong(lt[0], e, p, texture_color, N, vtx_uv);
+
 
     // Final color is a combination of texture color and toon lighting
-    vec3 final_color =toon_lighting;
+    vec3 final_color = toon_lighting;
     frag_color = vec4(final_color, 1.0);
 }
