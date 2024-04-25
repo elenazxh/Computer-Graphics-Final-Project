@@ -47,6 +47,8 @@ uniform sampler2D tex_sdf;   /* texture sampler for normal vector */
 uniform sampler2D tex_st;
 uniform sampler2D tex_rd;
 uniform sampler2D tex_M;
+
+uniform bool outline;
 /*output variables*/
 out vec4 frag_color;
 
@@ -78,7 +80,7 @@ vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
     vec3 toLight = normalize(light.pos.xyz - p);
 
     // Calculate diffuse intensity and clamp to [0, 0.]
-    float diff = clamp(dot(n, toLight), 0.65, 0.99);
+    float diff = clamp(dot(n, toLight), 0.60, 0.99);
 
     // Remap the diffuse range [0, 1] to [0, 1] and use it as the texture coordinate to sample from the color ramp
     float rampPosition = diff; // No need to remap as dot product is already [0, 1]
@@ -95,9 +97,14 @@ vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
     return toon;
 }
 
-vec3 apply_sdf_to_normal(vec3 normal, vec2 uv)
+vec3 apply_sdf_to_normal(vec3 normal, vec2 uv, vec4 lightPos)
 {
-    float sdf_value = texture(tex_sdf, uv).g; //green channel
+    // If lightPos.x is positive, flip the SDF map horizontally
+    if (lightPos.x > 0.0) {
+        uv.x = 1.0 - uv.x;
+    }
+    
+    float sdf_value = texture(tex_sdf, uv).g; // Sample the green channel for the SDF
     vec3 face_normal = vec3(0.0, 0.0, 1.0); 
     normal = mix(normal, face_normal, sdf_value); 
     return normalize(normal);
@@ -106,21 +113,25 @@ vec3 apply_sdf_to_normal(vec3 normal, vec2 uv)
 
 void main()
 {
-    vec3 e = position.xyz;             
-    vec3 p = vtx_position;              
-    vec3 N = normalize(vtx_normal);     
-    vec3 T = normalize(vtx_tangent);    
+    if (outline) {
+        frag_color = vec4(0.0, 0.0, 0.0, 1.0);  // Black color for the outline
+    } else {
+        vec3 e = position.xyz;             
+        vec3 p = vtx_position;              
+        vec3 N = normalize(vtx_normal);     
+        vec3 T = normalize(vtx_tangent);    
 
-    //N = apply_sdf_to_normal(N, vtx_uv);
+        N = apply_sdf_to_normal(N, vtx_uv, lt[0].pos);
 
-    vec3 texture_color = texture(tex_color, vtx_uv).rgb; // Use texture color as diffuse color
+        vec3 texture_color = texture(tex_color, vtx_uv).rgb; // Use texture color as diffuse color
 
-    vec3 toon_lighting = vec3(0.0, 0.0, 0.0);
-    toon_lighting += toon_shading(lt[0], e, p, N);
-    //toon_lighting += shading_texture_with_phong(lt[0], e, p, texture_color, N, vtx_uv);
+        vec3 toon_lighting = vec3(0.0, 0.0, 0.0);
+        toon_lighting += toon_shading(lt[0], e, p, N);
+        //toon_lighting += shading_texture_with_phong(lt[0], e, p, texture_color, N, vtx_uv);
 
 
-    // Final color is a combination of texture color and toon lighting
-    vec3 final_color = texture_color*toon_lighting;
-    frag_color = vec4(final_color, 1.0);
+        // Final color is a combination of texture color and toon lighting
+        vec3 final_color = texture_color*toon_lighting;
+        frag_color = vec4(final_color, 1.0);
+    }
 }

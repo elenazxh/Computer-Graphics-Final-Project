@@ -51,7 +51,11 @@ public:
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/basic.frag", "basic");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/phong.frag", "phong");
-        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/faceshader.frag", "faceshader");
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/toon.vert", "shaders/faceshader.frag", "faceshader");
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/bodyshader.frag", "bodyshader");
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/clothshader.frag", "clothshader");
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/hairshader.frag", "hairshader");
+
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/environment.frag", "environment");
         // OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/alphablend.frag", "blend");
@@ -89,6 +93,10 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_normal.png", "hair_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_color.png", "cloth_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_normal.png", "cloth_normal");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_metal.png", "cloth_metal");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_emission.png", "cloth_emission");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_metal.png", "hair_metal");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_metal.png", "hair_rs");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/body_color.png", "body_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eye_color.png", "eye_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/no_normal.jpg", "basic_normal");
@@ -163,9 +171,9 @@ public:
 
             //// set object's transform
             Matrix4f t;
-            t << 50, 0, 0, -1.5,
-                0, 50, 0, -1,
-                0, 0, 50, 0.5,
+            t << 5, 0, 0, -1.5,
+                0, 5, 0, -1,
+                0, 0, 5, 0.5,
                 0, 0, 0, 1;
             sphere->Set_Model_Matrix(t);
 
@@ -219,7 +227,7 @@ public:
             head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("faceshader"));
         }
 
-        ///hair
+        //hair
         {
             auto hair = Add_Obj_Mesh_Object("obj/hair.obj");
             Matrix4f t;
@@ -234,6 +242,9 @@ public:
             hair->Set_Shininess(128);
             hair->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
             hair->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
+            //hair->Add_Texture("tex_metal", OpenGLTextureLibrary::Get_Texture("hair_metal"));
+            //hair->Add_Texture("tex_st", OpenGLTextureLibrary::Get_Texture("hair_ST"));
+            hair->Add_Texture("tex_rs", OpenGLTextureLibrary::Get_Texture("hair_rs"));
             hair->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
         }
         //cloth
@@ -251,7 +262,9 @@ public:
             cloth->Set_Shininess(128);
             cloth->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("cloth_color"));
             cloth->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("cloth_normal"));
-            cloth->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+            cloth->Add_Texture("tex_metal", OpenGLTextureLibrary::Get_Texture("cloth_metal"));
+            cloth->Add_Texture("tex_emission", OpenGLTextureLibrary::Get_Texture("cloth_emission"));
+            cloth->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("clothshader"));
         }
         //body
         {
@@ -267,8 +280,8 @@ public:
             body->Set_Ks(Vector3f(2, 2, 2));
             body->Set_Shininess(128);
             body->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("body_color"));
-            body->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
-            body->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+            body->Add_Texture("tex_rd", OpenGLTextureLibrary::Get_Texture("head_rd"));
+            body->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("bodyshader"));
         }
         //eyebrow
         {
@@ -308,62 +321,62 @@ public:
         //////////////////////////////////////////////////////Special OBJ import/////////////////////////////////////////////////////////////
         //fur - placeholder
         //TO-DO: ������ͼë����ͼʵ��ë��Ч����Ӧ�úͲݲ�࣬�Ȳ�д���������
-        {
-            auto fur = Add_Obj_Mesh_Object("obj/fur.obj");
-            Matrix4f t;
-            t << 1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1;
-            fur->Set_Model_Matrix(t);
-            fur->Set_Ka(Vector3f(0.1, 0.1, 0.1));
-            fur->Set_Kd(Vector3f(0.7, 0.7, 0.7));
-            fur->Set_Ks(Vector3f(2, 2, 2));
-            fur->Set_Shininess(128);
-            fur->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
-            fur->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
-            fur->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
-        }
+        //{
+        //    auto fur = Add_Obj_Mesh_Object("obj/fur.obj");
+        //    Matrix4f t;
+        //    t << 1, 0, 0, 0,
+        //        0, 1, 0, 0,
+        //        0, 0, 1, 0,
+        //        0, 0, 0, 1;
+        //    fur->Set_Model_Matrix(t);
+        //    fur->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+        //    fur->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+        //    fur->Set_Ks(Vector3f(2, 2, 2));
+        //    fur->Set_Shininess(128);
+        //    fur->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
+        //    fur->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
+        //    fur->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+        //}
 
-        auto shadowFbo = OpenGLFbos::Get_Fbo_Instance("shadowFbo", 0);
+        //auto shadowFbo = OpenGLFbos::Get_Fbo_Instance("shadowFbo", 0);
 
 
 
         //eyeshadow - ���ǻ�ױ�Ǹ���Ӱ�����ۿ����������Ӱ
         //Ӧ������Ƭ����֮��ģ���Ϊ��Ӧ��texture�ǡ�M��
-        {
-            auto eyeshadow = Add_Obj_Mesh_Object("obj/eyeshadow.obj");
-            Matrix4f t;
-            t << 1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1;
-            eyeshadow->Set_Model_Matrix(t);
-            eyeshadow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
-            eyeshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
-            eyeshadow->Set_Ks(Vector3f(2, 2, 2));
-            eyeshadow->Set_Shininess(128);
-            eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eyeshadow_multiply"));
-            eyeshadow->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
-            eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
-        }
+        //{
+        //    auto eyeshadow = Add_Obj_Mesh_Object("obj/eyeshadow.obj");
+        //    Matrix4f t;
+        //    t << 1, 0, 0, 0,
+        //        0, 1, 0, 0,
+        //        0, 0, 1, 0,
+        //        0, 0, 0, 1;
+        //    eyeshadow->Set_Model_Matrix(t);
+        //    eyeshadow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+        //    eyeshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+        //    eyeshadow->Set_Ks(Vector3f(2, 2, 2));
+        //    eyeshadow->Set_Shininess(128);
+        //    eyeshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("eyeshadow_multiply"));
+        //    eyeshadow->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
+        //    eyeshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+        //}
         //��eyeshadowͬ��
-        {
-            auto hairshadow = Add_Obj_Mesh_Object("obj/hairshadow.obj");
-            Matrix4f t;
-            t << 1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1;
-            hairshadow->Set_Model_Matrix(t);
-            hairshadow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
-            hairshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
-            hairshadow->Set_Ks(Vector3f(2, 2, 2));
-            hairshadow->Set_Shininess(128);
-            hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hairshadow_multiply"));
-            hairshadow->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
-            hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
-        }
+        //{
+        //    auto hairshadow = Add_Obj_Mesh_Object("obj/hairshadow.obj");
+        //    Matrix4f t;
+        //    t << 1, 0, 0, 0,
+        //        0, 1, 0, 0,
+        //        0, 0, 1, 0,
+        //        0, 0, 0, 1;
+        //    hairshadow->Set_Model_Matrix(t);
+        //    hairshadow->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+        //    hairshadow->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+        //    hairshadow->Set_Ks(Vector3f(2, 2, 2));
+        //    hairshadow->Set_Shininess(128);
+        //    hairshadow->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hairshadow_multiply"));
+        //    hairshadow->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
+        //    hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+        //}
 
 
 
@@ -488,6 +501,7 @@ public:
     //// Go to next frame
     virtual void Toggle_Next_Frame()
     {
+
         for (auto &mesh_obj : mesh_object_array)
             mesh_obj->setTime(GLfloat(clock() - startTime) / CLOCKS_PER_SEC);
 
