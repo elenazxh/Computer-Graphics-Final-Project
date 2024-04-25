@@ -84,6 +84,7 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_sdf.png", "head_sdf");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_st.png", "head_st");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_rd.png", "head_rd");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/head_M.png", "head_M");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_color.png", "hair_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hair_normal.png", "hair_normal");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/cloth_color.png", "cloth_color");
@@ -102,9 +103,9 @@ public:
         //// You can also create your own lights by directly declaring them in a shader without using Add_Light().
         //// Here we declared three default lights for you. Feel free to add/delete/change them at your will.
 
-        opengl_window->Add_Light(Vector3f(3, 1, 3), Vector3f(0.1, 0.1, 0.1), Vector3f(1, 1, 1), Vector3f(0.5, 0.5, 0.5)); 
+        opengl_window->Add_Light(Vector3f(-1, 1, 3), Vector3f(0.1, 0.1, 0.1), Vector3f(0.9, 0.9, 0.9), Vector3f(0.5, 0.5, 0.5));
         opengl_window->Add_Light(Vector3f(0, 0, -5), Vector3f(0.1, 0.1, 0.1), Vector3f(0.9, 0.9, 0.9), Vector3f(0.5, 0.5, 0.5));
-        opengl_window->Add_Light(Vector3f(0, 1, 3), Vector3f(0.1, 0.1, 0.1), Vector3f(0.9, 0.9, 0.9), Vector3f(0.5, 0.5, 0.5));
+        //opengl_window->Add_Light(Vector3f(5, 1, 3), Vector3f(0.1, 0.1, 0.1), Vector3f(0.9, 0.9, 0.9), Vector3f(0.5, 0.5, 0.5));
 
         //// Add the background / environment
         //// Here we provide you with four default options to create the background of your scene:
@@ -212,6 +213,7 @@ public:
             head->Add_Texture("tex_sdf", OpenGLTextureLibrary::Get_Texture("head_sdf"));
             head->Add_Texture("tex_st", OpenGLTextureLibrary::Get_Texture("head_st"));
             head->Add_Texture("tex_rd", OpenGLTextureLibrary::Get_Texture("head_rd"));
+            head->Add_Texture("tex_M", OpenGLTextureLibrary::Get_Texture("head_M"));
 
             //// bind shader to object
             head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("faceshader"));

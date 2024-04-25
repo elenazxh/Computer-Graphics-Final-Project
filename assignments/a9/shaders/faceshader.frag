@@ -45,6 +45,8 @@ uniform float shininess;    /* object material shininess */
 uniform sampler2D tex_color;   /* texture sampler for color */
 uniform sampler2D tex_sdf;   /* texture sampler for normal vector */
 uniform sampler2D tex_st;
+uniform sampler2D tex_rd;
+uniform sampler2D tex_M;
 /*output variables*/
 out vec4 frag_color;
 
@@ -71,6 +73,28 @@ vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n, vec
     return phong;
 }
 
+vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
+{
+    vec3 toLight = normalize(light.pos.xyz - p);
+
+    // Calculate diffuse intensity and clamp to [0, 1]
+    float diff = clamp(dot(n, toLight), 0.0, 1.0);
+
+    // Remap the diffuse range [0, 1] to [0, 1] and use it as the texture coordinate to sample from the color ramp
+    float rampPosition = diff; // No need to remap as dot product is already [0, 1]
+    vec4 rampColor = texture(tex_rd, vec2(rampPosition, 0.5));
+
+    // The color from the ramp replaces the simple step function to create smooth transitions
+    vec3 diffuse = rampColor.rgb * kd; // Multiply by material's diffuse to incorporate the object's color
+
+    // Toon shading typically does not include a specular component, but you can add it back if desired
+    // For this example, the specular is removed to simplify the toon effect
+
+    // Combine ambient and diffuse components
+    vec3 toon = light.amb.rgb * ka + diffuse;
+    return toon;
+}
+
 vec3 apply_sdf_to_normal(vec3 normal, vec2 uv)
 {
     float sdf_value = texture(tex_sdf, uv).g; //green channel
@@ -87,17 +111,18 @@ void main()
     vec3 N = normalize(vtx_normal);     
     vec3 T = normalize(vtx_tangent);    
 
-    N = apply_sdf_to_normal(N, vtx_uv);
+    //N = apply_sdf_to_normal(N, vtx_uv);
 
     vec3 texture_color = texture(tex_color, vtx_uv).rgb; // Use texture color as diffuse color
 
-    vec3 phong_lighting = vec3(0.0, 0.0, 0.0);
-
+    vec3 toon_lighting = vec3(0.0, 0.0, 0.0);
     for (int i = 0; i < lt_att[0]; i++)
     {
-        phong_lighting += shading_texture_with_phong(lt[i], e, p, texture_color, N, vtx_uv);
+        toon_lighting += toon_shading(lt[i], e, p, N);
+        //toon_lighting += shading_texture_with_phong(lt[i], e, p, texture_color, N, vtx_uv);
     }
 
-    vec3 final_color = texture_color * phong_lighting; // Combine texture color with lighting
+    // Final color is a combination of texture color and toon lighting
+    vec3 final_color =toon_lighting;
     frag_color = vec4(final_color, 1.0);
 }
