@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 
+
 #ifndef __Main_cpp__
 #define __Main_cpp__
 
@@ -38,6 +39,18 @@ public:
         OpenGLViewer::Initialize();
     }
 
+    Vector3f RandomPosition(const Vector3f& minPosition, const Vector3f& maxPosition) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<float> disX(minPosition.x(), maxPosition.x());
+        std::uniform_real_distribution<float> disY(minPosition.y(), maxPosition.y());
+        std::uniform_real_distribution<float> disZ(minPosition.z(), maxPosition.z());
+        float x = disX(gen);
+        float y = disY(gen);
+        float z = disZ(gen);
+        return Vector3f(x, y, z);
+    }
+
     virtual void Initialize_Data()
     {
         //// Load all the shaders you need for the scene 
@@ -48,7 +61,7 @@ public:
         //// When we bind a shader to an object, we implement it as follows:
         //// object->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("shader_name"));
         //// Here "shader_name" needs to be one of the shader names you created previously with Add_Shader_From_File()
-
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/grass.vert", "shaders/grass.frag", "grass");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/basic.frag", "basic");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/phong.frag", "phong");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/toon.vert", "shaders/faceshader.frag", "faceshader");
@@ -103,6 +116,11 @@ public:
         
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/eyeshadow_multiply.png", "eyeshadow_multiply");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hairshadow_multiply.png", "hairshadow_multiply");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass.jpg", "grass_color");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass_black.jpg", "grass_black");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass.png", "grass");
+
+
 
         //// Add all the lights you need for the scene (no more than 4 lights)
         //// The four parameters are position, ambient, diffuse, and specular.
@@ -190,6 +208,61 @@ public:
             //// bind shader to object
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
         }
+
+        // {
+        //     //// create object by reading an obj mesh
+        //     auto grass = Add_Obj_Mesh_Object("obj/grass.obj");
+
+        //     //// set object's transform
+        //     Matrix4f t;
+        //     float scaleFactor = 0.001; // Adjust this value to control the scale
+        //     t << scaleFactor, 0, 0, 0,
+        //     0, scaleFactor, 0, 0,
+        //     0, 0, scaleFactor, 0,
+        //     0, 0, 0, 1; // 4x4 scaling matrix
+        //     grass->Set_Model_Matrix(t);
+
+
+        //     //// bind texture to object
+        //     grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass"));
+        //     //grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass_black"));
+
+        //     //// bind shader to object
+        //     grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("alphablend"));
+        // }
+        // Define the area where you want to scatter the grass
+    Vector3f minPosition = {-2.0f, 0.0f, -2.0f}; // Minimum position
+    Vector3f maxPosition = {2.0f, 0.0f, 2.0f};   // Maximum position
+    int numInstances = 100; // Number of grass instances
+
+    // Loop to create and scatter grass instances
+    for (int i = 0; i < numInstances; ++i) {
+    // Create a new grass object instance
+        auto grass = Add_Obj_Mesh_Object("obj/grass.obj");
+
+    // Generate random position within the specified area
+        Vector3f position = RandomPosition(minPosition, maxPosition);
+
+    // Set the scale of the grass object
+        Matrix4f t;
+        float scaleFactor = 0.001; // Adjust this value to control the scale
+        t << scaleFactor, 0, 0, 0,
+            0, scaleFactor, 0, 0,
+            0, 0, scaleFactor, 0,
+            0, 0, 0, 1; // 4x4 scaling matrix
+        grass->Set_Model_Matrix(t);
+
+    // Set the position of the grass object
+        Matrix4f translationMatrix = Matrix4f::Identity();
+        translationMatrix.block<3,1>(0,3) = position;
+        grass->Set_Model_Matrix(translationMatrix * t);
+
+    // Bind texture to the grass object
+        grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass"));
+
+    // Bind shader to the grass object
+        grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("grass"));
+    }
        
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
