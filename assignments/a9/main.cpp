@@ -590,7 +590,7 @@ public:
             t.block<3, 3>(0, 0) = rotation.toRotationMatrix();
 
             grass->Set_Model_Matrix(t);
-            grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass2"));
+            grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass"));
             grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
             grass->setTime(startTime);
         }
