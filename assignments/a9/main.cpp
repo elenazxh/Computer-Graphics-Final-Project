@@ -29,13 +29,17 @@ class MyDriver : public OpenGLViewer
     std::vector<OpenGLTriangleMesh *> mesh_object_array;
     OpenGLBgEffect *bgEffect = nullptr;
     OpenGLSkybox *skybox = nullptr;
+    OpenGLScreenCover *screen_cover = nullptr;
     clock_t startTime;
+    int frame;
 
 public:
     virtual void Initialize()
     {
+        draw_bk = false;
         draw_axes = false;
         startTime = clock();
+        frame = 1;
         OpenGLViewer::Initialize();
     }
 
@@ -120,6 +124,9 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass.jpg", "grass_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass_black.jpg", "grass_black");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass.png", "grass");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass2.png", "grass2");
+
+
 
 
 
@@ -212,10 +219,10 @@ public:
 
         std::random_device rd; 
         std::mt19937 gen(rd()); 
-        std::uniform_real_distribution<> distribX(-5.0, 5.0);
-        std::uniform_real_distribution<> distribY(-5.0, 5.0);
+        std::uniform_real_distribution<> distribX(-1.0, 1.0);
+        std::uniform_real_distribution<> distribY(-1.0, 1.0);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             float x = distribX(gen);  
             float y = distribY(gen);  
 
@@ -567,6 +574,7 @@ public:
             mesh_obj->Set_Data_Refreshed();
             mesh_obj->Initialize();
         }
+
         Toggle_Play();
     }
     void create_grass_bundle(float x,float y) {
@@ -588,6 +596,7 @@ public:
             grass->Set_Model_Matrix(t);
             grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("star_color"));
             grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
+            grass->setTime(GLfloat(clock() - startTime) / CLOCKS_PER_SEC); // Ensure `setTime()` updates shader time uniform directly
         }
     }
 
@@ -605,10 +614,15 @@ public:
         return mesh_obj;
     }
 
+    void Uniform_Update() {
+        screen_cover->setTime(GLfloat(clock() - startTime) / CLOCKS_PER_SEC);
+        screen_cover->setFrame(frame++);
+    }
+
     //// Go to next frame
     virtual void Toggle_Next_Frame()
     {
-
+        //Uniform_Update();
         for (auto &mesh_obj : mesh_object_array)
             mesh_obj->setTime(GLfloat(clock() - startTime) / CLOCKS_PER_SEC);
 
