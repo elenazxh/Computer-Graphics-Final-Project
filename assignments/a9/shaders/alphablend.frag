@@ -1,31 +1,28 @@
 #version 330 core
 
 /*default camera matrices. do not modify.*/
-layout(std140) uniform camera
-{
-    mat4 projection;	/*camera's projection matrix*/
-    mat4 view;			/*camera's view matrix*/
-    mat4 pvm;			/*camera's projection*view*model matrix*/
-    mat4 ortho;			/*camera's ortho projection matrix*/
-    vec4 position;		/*camera's position in world space*/
+layout(std140) uniform camera {
+    mat4 projection;
+    mat4 view;
+    mat4 pvm;
+    mat4 ortho;
+    vec4 position;
 };
 
 /* set light ubo. do not modify.*/
-struct light
-{
+struct light {
     ivec4 att;
-    vec4 pos; // position
+    vec4 pos;
     vec4 dir;
-    vec4 amb; // ambient intensity
-    vec4 dif; // diffuse intensity
-    vec4 spec; // specular intensity
+    vec4 amb;
+    vec4 dif;
+    vec4 spec;
     vec4 atten;
     vec4 r;
 };
-layout(std140) uniform lights
-{
+layout(std140) uniform lights {
     vec4 amb;
-    ivec4 lt_att; // lt_att[0] = number of lights
+    ivec4 lt_att;
     light lt[4];
 };
 
@@ -38,20 +35,27 @@ in vec2 vtx_uv;
 in vec3 vtx_tangent;
 
 uniform sampler2D tex_color;   /* texture sampler for color */
+uniform float iTime; 
 
 /*output variables*/
 out vec4 frag_color;
 
-void main()
-{
-    vec4 tex_color = texture(tex_color, vtx_uv);
+void main() {
 
-    /* This if statement discard a fragment if its alpha value is below a threshold (for alpha blending) */
+    float heightFactor = vtx_model_position.y; 
+    
+    float swayFactor = sin(iTime*1.5 + heightFactor * 5.0) * 0.1 * heightFactor; 
+    
+    float twistFactor = sin(iTime*1.5 + heightFactor * 10.0) * 0.05 * heightFactor; 
 
-    if(tex_color.a < 0.1)
-    {
+    vec2 animatedUV = vtx_uv + vec2(swayFactor + twistFactor, 0);
+    
+    vec4 tex_color = texture(tex_color, animatedUV); 
+
+    // Discard the fragment if its alpha is below a threshold
+    if (tex_color.a < 0.1) {
         discard;
     }
 
-    frag_color = tex_color;
+    frag_color = tex_color; // Set the output color
 }

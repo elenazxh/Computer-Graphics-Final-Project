@@ -35,13 +35,6 @@ void main() {
     vec4 worldNormal = model * vec4(normal.xyz, 0.);
     vec4 worldTangent = model * vec4(tangent.xyz, 0.);
 
-    //added code
-    // Adjust sway to be more pronounced
-    float swayAmplitude = 100; // Adjust this to increase amplitude
-    float swayFrequency = 90.0; // Increase or decrease this to control speed
-    float swayAmount = swayAmplitude * sin(iTime * swayFrequency + worldPos.y * 5.0); 
-    worldPos.x += swayAmount; 
-    //end here
     // billboard effect begin, https://community.khronos.org/t/opengl-billboard/108352
     vec3 noTransPos = mat3(model) * pos.xyz; // world position without translation
     mat4 inverseViewMat = inverse(view);

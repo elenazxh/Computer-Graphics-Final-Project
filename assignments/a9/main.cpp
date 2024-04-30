@@ -29,17 +29,13 @@ class MyDriver : public OpenGLViewer
     std::vector<OpenGLTriangleMesh *> mesh_object_array;
     OpenGLBgEffect *bgEffect = nullptr;
     OpenGLSkybox *skybox = nullptr;
-    OpenGLScreenCover *screen_cover = nullptr;
     clock_t startTime;
-    int frame;
 
 public:
     virtual void Initialize()
     {
-        draw_bk = false;
         draw_axes = false;
         startTime = clock();
-        frame = 1;
         OpenGLViewer::Initialize();
     }
 
@@ -594,9 +590,9 @@ public:
             t.block<3, 3>(0, 0) = rotation.toRotationMatrix();
 
             grass->Set_Model_Matrix(t);
-            grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("star_color"));
+            grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass2"));
             grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
-            grass->setTime(GLfloat(clock() - startTime) / CLOCKS_PER_SEC); // Ensure `setTime()` updates shader time uniform directly
+            grass->setTime(startTime);
         }
     }
 
@@ -612,11 +608,6 @@ public:
 
         mesh_object_array.push_back(mesh_obj);
         return mesh_obj;
-    }
-
-    void Uniform_Update() {
-        screen_cover->setTime(GLfloat(clock() - startTime) / CLOCKS_PER_SEC);
-        screen_cover->setFrame(frame++);
     }
 
     //// Go to next frame
