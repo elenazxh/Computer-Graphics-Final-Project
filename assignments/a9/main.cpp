@@ -70,7 +70,7 @@ public:
         //OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/hairshader.frag", "hairshader");
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/environment.frag", "environment");
-        // OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
+        //OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/alphablend.frag", "blend");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/billboard.vert", "shaders/alphablend.frag", "billboard");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/terrain.vert", "shaders/terrain.frag", "terrain");
@@ -94,6 +94,7 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/buzz_color.png", "buzz_color");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/star.png", "star_color");
         */
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/star.png", "star_color");
 
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/skybox.png", "skybox");
 
@@ -189,9 +190,9 @@ public:
 
             //// set object's transform
             Matrix4f t;
-            t << 5, 0, 0, -1.5,
-                0, 5, 0, -1,
-                0, 0, 5, 0.5,
+            t << 5, 0, 0, 0,
+                0, 5, 0, 0,
+                0, 0, 5, 0,
                 0, 0, 0, 1;
             sphere->Set_Model_Matrix(t);
 
@@ -207,6 +208,18 @@ public:
 
             //// bind shader to object
             sphere->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("basic"));
+        }
+
+        std::random_device rd; 
+        std::mt19937 gen(rd()); 
+        std::uniform_real_distribution<> distribX(-5.0, 5.0);
+        std::uniform_real_distribution<> distribY(-5.0, 5.0);
+
+        for (int i = 0; i < 1000; i++) {
+            float x = distribX(gen);  
+            float y = distribY(gen);  
+
+            create_grass_bundle(x, y);
         }
 
         // {
@@ -231,39 +244,39 @@ public:
         //     grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("alphablend"));
         // }
         // Define the area where you want to scatter the grass
-    Vector3f minPosition = {-2.0f, 0.0f, -2.0f}; // Minimum position
-    Vector3f maxPosition = {2.0f, 0.0f, 2.0f};   // Maximum position
-    int numInstances = 100; // Number of grass instances
+    //Vector3f minPosition = {-2.0f, 0.0f, -2.0f}; // Minimum position
+    //Vector3f maxPosition = {2.0f, 0.0f, 2.0f};   // Maximum position
+    //int numInstances = 100; // Number of grass instances
 
-    // Loop to create and scatter grass instances
-    for (int i = 0; i < numInstances; ++i) {
-    // Create a new grass object instance
-        auto grass = Add_Obj_Mesh_Object("obj/grass.obj");
+    //// Loop to create and scatter grass instances
+    //for (int i = 0; i < numInstances; ++i) {
+    //// Create a new grass object instance
+    //    auto grass = Add_Obj_Mesh_Object("obj/grass.obj");
 
-    // Generate random position within the specified area
-        Vector3f position = RandomPosition(minPosition, maxPosition);
+    //// Generate random position within the specified area
+    //    Vector3f position = RandomPosition(minPosition, maxPosition);
 
-    // Set the scale of the grass object
-        Matrix4f t;
-        float scaleFactor = 0.001; // Adjust this value to control the scale
-        t << scaleFactor, 0, 0, 0,
-            0, scaleFactor, 0, 0,
-            0, 0, scaleFactor, 0,
-            0, 0, 0, 1; // 4x4 scaling matrix
-        grass->Set_Model_Matrix(t);
+    //// Set the scale of the grass object
+    //    Matrix4f t;
+    //    float scaleFactor = 0.001; // Adjust this value to control the scale
+    //    t << scaleFactor, 0, 0, 0,
+    //        0, scaleFactor, 0, 0,
+    //        0, 0, scaleFactor, 0,
+    //        0, 0, 0, 1; // 4x4 scaling matrix
+    //    grass->Set_Model_Matrix(t);
 
-    // Set the position of the grass object
-        Matrix4f translationMatrix = Matrix4f::Identity();
-        translationMatrix.block<3,1>(0,3) = position;
-        grass->Set_Model_Matrix(translationMatrix * t);
+    //// Set the position of the grass object
+    //    Matrix4f translationMatrix = Matrix4f::Identity();
+    //    translationMatrix.block<3,1>(0,3) = position;
+    //    grass->Set_Model_Matrix(translationMatrix * t);
 
-    // Bind texture to the grass object
-        grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass"));
+    //// Bind texture to the grass object
+    //    grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass"));
 
-    // Bind shader to the grass object
-        grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("grass"));
-    }
-       
+    //// Bind shader to the grass object
+    //    grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("grass"));
+    //}
+    //   
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////// Angelina Character Import ////////////////////////////////////////////////////////
@@ -522,10 +535,10 @@ public:
         //    sqad->Set_Model_Matrix(t);
 
         //    //// bind texture to object
-        //    sqad->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("star_color"));
+        //    sqad->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair"));
 
         //    //// bind shader to object
-        //    sqad->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
+        //    sqad->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
         //}
 
         //// Here we show an example of shading (ray-tracing) a sphere with environment mapping
@@ -555,6 +568,27 @@ public:
             mesh_obj->Initialize();
         }
         Toggle_Play();
+    }
+    void create_grass_bundle(float x,float y) {
+        const int num_grass_blades = 4;
+        const float angle_offset = 45.0f; 
+
+        for (int i = 0; i < num_grass_blades; ++i) {
+            auto grass = Add_Obj_Mesh_Object("obj/sqad.obj");
+            Matrix4f t;
+            t << 1, 0, 0, x,
+                0, 1, 0, 0,
+                0, 0, 1, y,
+                0, 0, 0, 1;
+
+
+            Eigen::AngleAxisf rotation(i * angle_offset * 3.1415926 / 180.0f, Eigen::Vector3f::UnitY());
+            t.block<3, 3>(0, 0) = rotation.toRotationMatrix();
+
+            grass->Set_Model_Matrix(t);
+            grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("star_color"));
+            grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
+        }
     }
 
     OpenGLTriangleMesh *Add_Obj_Mesh_Object(std::string obj_file_name)
