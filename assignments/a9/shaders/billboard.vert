@@ -10,6 +10,7 @@ layout(std140) uniform camera {
 };
 
 uniform mat4 model;		/*model matrix*/
+uniform float iTime;            /* time */
 
 /*input variables*/
 layout(location = 0) in vec4 pos;			/*vertex position*/
@@ -26,12 +27,21 @@ out vec3 vtx_model_position; // model space position
 out vec2 vtx_uv;
 out vec3 vtx_tangent;
 
+#define time (iTime*1.0)    
+
 void main() {
     vec4 worldPos = model * vec4(pos.xyz, 1.);
     // ! do not support non-uniform scale
     vec4 worldNormal = model * vec4(normal.xyz, 0.);
     vec4 worldTangent = model * vec4(tangent.xyz, 0.);
 
+    //added code
+    // Adjust sway to be more pronounced
+    float swayAmplitude = 100; // Adjust this to increase amplitude
+    float swayFrequency = 90.0; // Increase or decrease this to control speed
+    float swayAmount = swayAmplitude * sin(iTime * swayFrequency + worldPos.y * 5.0); 
+    worldPos.x += swayAmount; 
+    //end here
     // billboard effect begin, https://community.khronos.org/t/opengl-billboard/108352
     vec3 noTransPos = mat3(model) * pos.xyz; // world position without translation
     mat4 inverseViewMat = inverse(view);
