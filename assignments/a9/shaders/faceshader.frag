@@ -52,28 +52,7 @@ uniform bool outline;
 /*output variables*/
 out vec4 frag_color;
 
-vec3 shading_texture_with_phong(light li, vec3 e, vec3 p, vec3 s, vec3 n, vec2 uv)
-{
 
-    vec3 ambient = li.amb.rgb * ka;
-    vec3 toLight = normalize(li.pos.xyz - p);
-    vec3 toView = normalize(e - p);
-    vec3 reflectDir = reflect(-toLight, n);
-
-    vec3 st = texture(tex_st, uv).rgb; // Use vec2 for the ST map's two components
-    float specularIntensity = st.b; // Specular intensity from S channel
-    float glossiness = st.r; // Glossiness from T channel
-
-    float diff = max(dot(n, toLight), 0.0);
-    vec3 diffuse = li.dif.rgb * kd * diff;
-
-    // Use glossiness in the exponent for shininess to modify the specular highlight size
-    float spec = pow(max(dot(toView, reflectDir), 0.0), shininess * glossiness);
-    vec3 specular = li.spec.rgb * ks * specularIntensity * spec;
-
-    vec3 phong = ambient + diffuse + specular;
-    return phong;
-}
 
 vec3 toon_shading(light li, vec3 e, vec3 p, vec3 n)
 {

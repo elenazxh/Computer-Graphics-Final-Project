@@ -67,7 +67,7 @@ public:
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/toon.vert", "shaders/faceshader.frag", "faceshader");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/bodyshader.frag", "bodyshader");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/clothshader.frag", "clothshader");
-        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/hairshader.frag", "hairshader");
+        //OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/hairshader.frag", "hairshader");
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/environment.frag", "environment");
         // OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
