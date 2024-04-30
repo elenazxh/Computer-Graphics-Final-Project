@@ -581,7 +581,7 @@ public:
             auto grass = Add_Obj_Mesh_Object("obj/sqad.obj");
             Matrix4f t;
             t << 0.5, 0, 0, x,
-                0, 1, 0, -0.1,
+                0, 0.5, 0, -0.2,
                 0, 0, 1, y,
                 0, 0, 0, 1;
 
