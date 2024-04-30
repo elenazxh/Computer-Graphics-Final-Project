@@ -11,7 +11,8 @@ layout(std140) uniform camera {
 
 /* set light ubo. do not modify.*/
 struct light {
-    ivec4 att;    vec4 pos;
+    ivec4 att;
+    vec4 pos;
     vec4 dir;
     vec4 amb;
     vec4 dif;
@@ -42,10 +43,11 @@ out vec4 frag_color;
 void main() {
     vec4 tex_color = texture(tex_color, vtx_uv);
 
-    /* This if statement discard a fragment if its alpha value is below a threshold (for alpha blending) */
+    if (vtx_uv.y < 0.3) {
+        discard;  
+    }
 
-    if(tex_color.a < 0.1)
-    {
+    if (tex_color.a < 0.1) {
         discard;
     }
 
