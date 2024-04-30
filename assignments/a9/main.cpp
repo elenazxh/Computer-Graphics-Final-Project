@@ -215,10 +215,10 @@ public:
 
         std::random_device rd; 
         std::mt19937 gen(rd()); 
-        std::uniform_real_distribution<> distribX(-1.0, 1.0);
-        std::uniform_real_distribution<> distribY(-1.0, 1.0);
+        std::uniform_real_distribution<> distribX(-3.0, 3.0);
+        std::uniform_real_distribution<> distribY(-3.0, 3.0);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             float x = distribX(gen);  
             float y = distribY(gen);  
 

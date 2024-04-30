@@ -44,9 +44,9 @@ void main() {
 
     float heightFactor = vtx_model_position.y; 
     
-    float swayFactor = sin(iTime*1.5 + heightFactor * 5.0) * 0.1 * heightFactor; 
+    float swayFactor = sin(((vtx_model_position.x+iTime)*1.5) + heightFactor * 5.0) * 0.1 * heightFactor; 
     
-    float twistFactor = sin(iTime*1.5 + heightFactor * 10.0) * 0.05 * heightFactor; 
+    float twistFactor = sin(((vtx_model_position.x+iTime)*1.5) + heightFactor * 10.0) * 0.05 * heightFactor; 
 
     vec2 animatedUV = vtx_uv + vec2(swayFactor + twistFactor, 0);
     
