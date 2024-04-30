@@ -41,21 +41,14 @@ uniform float iTime;
 out vec4 frag_color;
 
 void main() {
+    vec4 tex_color = texture(tex_color, vtx_uv);
 
-    float heightFactor = vtx_model_position.y; 
-    
-    float swayFactor = sin(iTime*1.5 + heightFactor * 5.0) * 0.1 * heightFactor; 
-    
-    float twistFactor = sin(iTime*1.5 + heightFactor * 10.0) * 0.05 * heightFactor; 
+    /* This if statement discard a fragment if its alpha value is below a threshold (for alpha blending) */
 
-    vec2 animatedUV = vtx_uv + vec2(swayFactor + twistFactor, 0);
-    
-    vec4 tex_color = texture(tex_color, animatedUV); 
-
-    // Discard the fragment if its alpha is below a threshold
-    if (tex_color.a < 0.1) {
+    if(tex_color.a < 0.1)
+    {
         discard;
     }
 
-    frag_color = tex_color; // Set the output color
+    frag_color = tex_color;
 }

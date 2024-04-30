@@ -215,10 +215,10 @@ public:
 
         std::random_device rd; 
         std::mt19937 gen(rd()); 
-        std::uniform_real_distribution<> distribX(-1.0, 1.0);
-        std::uniform_real_distribution<> distribY(-1.0, 1.0);
+        std::uniform_real_distribution<> distribX(-3.0, 3.0);
+        std::uniform_real_distribution<> distribY(-3.0, 3.0);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             float x = distribX(gen);  
             float y = distribY(gen);  
 
@@ -580,8 +580,8 @@ public:
         for (int i = 0; i < num_grass_blades; ++i) {
             auto grass = Add_Obj_Mesh_Object("obj/sqad.obj");
             Matrix4f t;
-            t << 1, 0, 0, x,
-                0, 1, 0, 0,
+            t << 0.5, 0, 0, x,
+                0, 1, 0, -0.1,
                 0, 0, 1, y,
                 0, 0, 0, 1;
 
@@ -590,6 +590,7 @@ public:
             t.block<3, 3>(0, 0) = rotation.toRotationMatrix();
 
             grass->Set_Model_Matrix(t);
+            grass->Set_Ka(Vector3f(x, y, 0.));
             grass->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("grass"));
             grass->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("billboard"));
             grass->setTime(startTime);
