@@ -48,9 +48,9 @@ uniform sampler2D tex_rd;
 out vec4 frag_color;
 
 
-vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
+vec3 toon_shading(light li, vec3 e, vec3 p, vec3 n)
 {
-    vec3 toLight = normalize(light.pos.xyz - p);
+    vec3 toLight = normalize(li.pos.xyz - p);
 
     // Calculate diffuse intensity and clamp to [0, 0.]
     float diff = clamp(dot(n, toLight), 0.60, 0.99);
@@ -66,7 +66,7 @@ vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
     // For this example, the specular is removed to simplify the toon effect
 
     // Combine ambient and diffuse components
-    vec3 toon = light.amb.rgb * ka + diffuse;
+    vec3 toon = li.amb.rgb * ka + diffuse;
     return toon;
 }
 

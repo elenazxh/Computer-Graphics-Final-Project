@@ -48,19 +48,19 @@ uniform sampler2D tex_normal;   /* texture sampler for normal vector */
 /*output variables*/
 out vec4 frag_color;
 
-vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n)
+vec3 shading_texture_with_phong(light li, vec3 e, vec3 p, vec3 s, vec3 n)
 {
 
-    vec3 ambient = light.amb.rgb * ka;
-    vec3 toLight = normalize(light.pos.xyz - p);
+    vec3 ambient = li.amb.rgb * ka;
+    vec3 toLight = normalize(li.pos.xyz - p);
     vec3 toView = normalize(e - p);
     vec3 reflectDir = reflect(-toLight, n);
 
     float diff = max(dot(n, toLight), 0.0);
-    vec3 diffuse = light.dif.rgb * kd * diff;
+    vec3 diffuse = li.dif.rgb * kd * diff;
 
     float spec = pow(max(dot(toView, reflectDir), 0.0), shininess);
-    vec3 specular = light.spec.rgb * ks * spec;
+    vec3 specular = li.spec.rgb * ks * spec;
 
     vec3 phong = ambient + diffuse + specular;
     return phong;

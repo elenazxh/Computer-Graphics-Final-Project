@@ -52,11 +52,11 @@ uniform bool outline;
 /*output variables*/
 out vec4 frag_color;
 
-vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n, vec2 uv)
+vec3 shading_texture_with_phong(light li, vec3 e, vec3 p, vec3 s, vec3 n, vec2 uv)
 {
 
-    vec3 ambient = light.amb.rgb * ka;
-    vec3 toLight = normalize(light.pos.xyz - p);
+    vec3 ambient = li.amb.rgb * ka;
+    vec3 toLight = normalize(li.pos.xyz - p);
     vec3 toView = normalize(e - p);
     vec3 reflectDir = reflect(-toLight, n);
 
@@ -65,19 +65,19 @@ vec3 shading_texture_with_phong(light light, vec3 e, vec3 p, vec3 s, vec3 n, vec
     float glossiness = st.r; // Glossiness from T channel
 
     float diff = max(dot(n, toLight), 0.0);
-    vec3 diffuse = light.dif.rgb * kd * diff;
+    vec3 diffuse = li.dif.rgb * kd * diff;
 
     // Use glossiness in the exponent for shininess to modify the specular highlight size
     float spec = pow(max(dot(toView, reflectDir), 0.0), shininess * glossiness);
-    vec3 specular = light.spec.rgb * ks * specularIntensity * spec;
+    vec3 specular = li.spec.rgb * ks * specularIntensity * spec;
 
     vec3 phong = ambient + diffuse + specular;
     return phong;
 }
 
-vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
+vec3 toon_shading(light li, vec3 e, vec3 p, vec3 n)
 {
-    vec3 toLight = normalize(light.pos.xyz - p);
+    vec3 toLight = normalize(li.pos.xyz - p);
 
     // Calculate diffuse intensity and clamp to [0, 0.]
     float diff = clamp(dot(n, toLight), 0.60, 0.99);
@@ -93,7 +93,7 @@ vec3 toon_shading(light light, vec3 e, vec3 p, vec3 n)
     // For this example, the specular is removed to simplify the toon effect
 
     // Combine ambient and diffuse components
-    vec3 toon = light.amb.rgb * ka + diffuse;
+    vec3 toon = li.amb.rgb * ka + diffuse;
     return toon;
 }
 
