@@ -61,6 +61,11 @@ float height(vec2 v)
     return h * 2.;
 }
 
+float curve_hill(vec2 v)
+{
+    return sin(0.02*v.x*v.y*v.y)*cos(v.y);
+}
+
 uniform mat4 model;		/*model matrix*/
 
 /*input variables*/
@@ -72,7 +77,7 @@ out vec3 vtx_pos;		////vertex position in the world space
 void main()
 {
     vtx_pos = pos.xyz;
-    vtx_pos.z = height(pos.xy);
+    vtx_pos.z = curve_hill(pos.xy);
 
     gl_Position = pvm * model * vec4(vtx_pos, 1.);
 }
