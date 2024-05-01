@@ -218,10 +218,10 @@ public:
 
         std::random_device rd; 
         std::mt19937 gen(rd()); 
-        std::uniform_real_distribution<> distribX(-3.0, 3.0);
-        std::uniform_real_distribution<> distribY(-3.0, 3.0);
+        std::uniform_real_distribution<> distribX(-5.0, 5.0);
+        std::uniform_real_distribution<> distribY(-5.0, 5.0);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             float x = distribX(gen);  
             float y = distribY(gen);  
 
@@ -471,44 +471,26 @@ public:
         //    hairshadow->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
         //}
 
+        {
+            auto eye = Add_Obj_Mesh_Object("obj/land.obj");
+            Matrix4f t;
+            t << 5, 0, 0, 0,
+                0, 5, 0, 0,
+                0, 0, 5, 0,
+                0, 0, 0, 1;
+            eye->Set_Model_Matrix(t);
+            eye->Set_Ka(Vector3f(0.1, 0.1, 0.1));
+            eye->Set_Kd(Vector3f(0.7, 0.7, 0.7));
+            eye->Set_Ks(Vector3f(2, 2, 2));
+            eye->Set_Shininess(128);
+            eye->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hill"));
+            eye->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("basic_normal"));
+            eye->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("terrain"));
+        }
+
 
 
         //// Here we show an example of adding a mesh with noise-terrain (A6)
-        {
-           //// create object by reading an obj mesh
-           auto terrain = Add_Obj_Mesh_Object("obj/plane.obj");
-
-           Matrix4f r;
-            r << 1, 0, 0, 0,
-                0, 0, -1, 0,
-                0, 1, 0, 0,
-                0, 0, 0, 1;
-
-            Matrix4f s, t;
-
-            s << 0.5, 0, 0, 0,
-                0, 0.5, 0, 0,
-                0, 0, 0.5, 0,
-                0, 0, 0, 1;
-
-            t << 10, 0, 0, -20,
-                0, 10, 0, -3.6,
-                0, 0, 10, -20,
-                0, 0, 0, 1;
-
-            Matrix4f finalTransform = t * s * r;
-            terrain->Set_Model_Matrix(finalTransform);
-
-           //// set object's material
-           terrain->Set_Ka(Vector3f(0.1f, 0.1f, 0.1f));
-           terrain->Set_Kd(Vector3f(0.7f, 0.7f, 0.7f));
-           terrain->Set_Ks(Vector3f(1, 1, 1));
-           terrain->Set_Shininess(128.f);
-
-           //// bind shader to object (we do not bind texture for this object because we create noise for texture)
-           terrain->Add_Texture("hill", OpenGLTextureLibrary::Get_Texture("hill"));
-           terrain->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("terrain"));
-        }
 
         //// Here we show an example of adding a transparent object with alpha blending
         //// This example will be useful if you implement objects such as tree leaves, grass blades, flower pedals, etc.
