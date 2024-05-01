@@ -119,6 +119,8 @@ void OpenGLPoint::Display() const
 	Bind_Uniform_Block_To_Ubo(shader,"camera");
 	shader->Set_Uniform_Vec4f("color",color.rgba);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
 	shader->Set_Uniform("point_size",point_size);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_POINTS,0,vtx_size/4);

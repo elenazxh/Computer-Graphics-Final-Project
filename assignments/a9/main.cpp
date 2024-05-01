@@ -67,7 +67,7 @@ public:
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/toon.vert", "shaders/faceshader.frag", "faceshader");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/bodyshader.frag", "bodyshader");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/clothshader.frag", "clothshader");
-        //OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/hairshader.frag", "hairshader");
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/hairshader.frag", "hairshader");
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/environment.frag", "environment");
         //OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/stars.vert", "shaders/stars.frag", "stars");
@@ -75,6 +75,8 @@ public:
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/billboard.vert", "shaders/alphablend.frag", "billboard");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/terrain.vert", "shaders/terrain.frag", "terrain");
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/skybox.vert", "shaders/skybox.frag", "skybox");
+
+        OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/outline.vert", "shaders/outline.frag", "outline");
 
         OpenGLShaderLibrary::Instance()->Add_Shader_From_File("shaders/basic.vert", "shaders/multiplyblend.frag", "multiply");
 
@@ -316,6 +318,7 @@ public:
             head->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("faceshader"));
         }
 
+
         //hair
         {
             auto hair = Add_Obj_Mesh_Object("obj/hair.obj");
@@ -326,15 +329,15 @@ public:
                 0, 0, 0, 1;
             hair->Set_Model_Matrix(t);
             hair->Set_Ka(Vector3f(0.1, 0.1, 0.1));
-            hair->Set_Kd(Vector3f(0.7, 0.7, 0.7));
-            hair->Set_Ks(Vector3f(2, 2, 2));
+            hair->Set_Kd(Vector3f(0.5, 0.5, 0.5));
+            hair->Set_Ks(Vector3f(0.5, 0.5, 0.5));
             hair->Set_Shininess(128);
             hair->Add_Texture("tex_color", OpenGLTextureLibrary::Get_Texture("hair_color"));
             hair->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("hair_normal"));
-            //hair->Add_Texture("tex_metal", OpenGLTextureLibrary::Get_Texture("hair_metal"));
+            hair->Add_Texture("tex_M", OpenGLTextureLibrary::Get_Texture("hair_metal"));
             //hair->Add_Texture("tex_st", OpenGLTextureLibrary::Get_Texture("hair_ST"));
             hair->Add_Texture("tex_rs", OpenGLTextureLibrary::Get_Texture("hair_rs"));
-            hair->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
+            hair->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("hairshader"));
         }
         //cloth
         {
@@ -353,7 +356,7 @@ public:
             cloth->Add_Texture("tex_normal", OpenGLTextureLibrary::Get_Texture("cloth_normal"));
             cloth->Add_Texture("tex_metal", OpenGLTextureLibrary::Get_Texture("cloth_metal"));
             cloth->Add_Texture("tex_emission", OpenGLTextureLibrary::Get_Texture("cloth_emission"));
-            cloth->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("clothshader"));
+            cloth->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("phong"));
         }
         //body
         {
@@ -581,7 +584,7 @@ public:
             auto grass = Add_Obj_Mesh_Object("obj/sqad.obj");
             Matrix4f t;
             t << 0.1, 0, 0, x,
-                0, 0.1, 0, 0,
+                0, 0.1, 0, -0.1,
                 0, 0, 0.1, y,
                 0, 0, 0, 1;
 
