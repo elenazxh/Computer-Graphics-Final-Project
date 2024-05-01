@@ -121,6 +121,7 @@ public:
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass_black.jpg", "grass_black");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass.png", "grass");
         OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/grass2.png", "grass2");
+        OpenGLTextureLibrary::Instance()->Add_Texture_From_File("tex/hill.png", "hill");
 
 
 
@@ -474,27 +475,26 @@ public:
            //// create object by reading an obj mesh
            auto terrain = Add_Obj_Mesh_Object("obj/plane.obj");
 
-           // set object's transform
-        //    Matrix4f r, s, t;
-        //    r << 1, 0, 0, 0,
-        //        0, 0.5, 0.67, 0,
-        //        0, -0.67, 0.5, 0,
-        //        0, 0, 0, 1;
-        //    s << 0.5, 0, 0, 0,
-        //        0, 0.5, 0, 0,
-        //        0, 0, 0.5, 0,
-        //        0, 0, 0, 1;
-        //    t << 1, 0, 0, -2,
-        //         0, 1, 0, 0.5,
-        //         0, 0, 1, 0,
-        //         0, 0, 0, 1,
-        //    terrain->Set_Model_Matrix(t * s * r);
-        Matrix4f t;
-           t << 1, 0, 0, 0,
+           Matrix4f r;
+            r << 1, 0, 0, 0,
+                0, 0, -1, 0,
                 0, 1, 0, 0,
-                0, 0, 1, 2.5,
                 0, 0, 0, 1;
-           terrain->Set_Model_Matrix(t);
+
+            Matrix4f s, t;
+
+            s << 0.5, 0, 0, 0,
+                0, 0.5, 0, 0,
+                0, 0, 0.5, 0,
+                0, 0, 0, 1;
+
+            t << 10, 0, 0, -20,
+                0, 10, 0, -3.6,
+                0, 0, 10, -20,
+                0, 0, 0, 1;
+
+            Matrix4f finalTransform = t * s * r;
+            terrain->Set_Model_Matrix(finalTransform);
 
            //// set object's material
            terrain->Set_Ka(Vector3f(0.1f, 0.1f, 0.1f));
@@ -503,6 +503,7 @@ public:
            terrain->Set_Shininess(128.f);
 
            //// bind shader to object (we do not bind texture for this object because we create noise for texture)
+           terrain->Add_Texture("hill", OpenGLTextureLibrary::Get_Texture("hill"));
            terrain->Add_Shader_Program(OpenGLShaderLibrary::Get_Shader("terrain"));
         }
 

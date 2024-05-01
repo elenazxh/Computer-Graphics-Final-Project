@@ -63,7 +63,7 @@ float height(vec2 v)
 
 float curve_hill(vec2 v)
 {
-    return sqrt(pow(v.x*2, 2) + pow(v.y*2, 2));
+    return sin(0.02*v.x*v.y*v.y)*cos(v.y);
 }
 
 uniform mat4 model;		/*model matrix*/
